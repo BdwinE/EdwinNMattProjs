@@ -38,6 +38,28 @@ class HashTable(n:Int) {
   }
   def hashFunction(key: String, tableSize : Int): Int ={
     //add the first index with the last index and then multiply that by the middle index
+    var keyVal = key.trim
+    var sum = 0
+    val con = 7
+
+    if(keyVal.length>10) {
+      for (i <- 0 to 10) {
+        sum += keyVal.charAt(i).toInt * Math.pow(con.toDouble, i.toDouble).toInt
+      }
+    }
+    else{
+      for (i <- 0 to keyVal.length-1) {
+        sum += keyVal.charAt(i).toInt * Math.pow(con, i).toInt
+      }
+    }
+    val index = sum % tableSize
+    if(index<0) {
+      -index
+    }
+    else {
+      index
+    }
+    /*
     var index = 1
     var keyLength = key.length
     if(key.length>2){
@@ -54,10 +76,10 @@ class HashTable(n:Int) {
     }
     else {
       index
-    }
+    }*/
   }
   def determineSize(n:Int):Int ={//used to determine optimial size for hashtable
-    return (Math.pow(2, (n/2).floor).toInt)*2
+    return ((Math.pow(2, (n/2).floor).toInt*2)+1)///1.7).toInt*2)+1
 
     /*println("n: " + n)
     return determineSizeHelp(n, true) + determineSizeHelp(n, false)*/
@@ -104,7 +126,7 @@ class HashTable(n:Int) {
 object Mainn{
   def main(args: Array[String]): Unit ={
     var hTable:HashTable = new HashTable(16)
-    /*val r = scala.util.Random
+    val r = scala.util.Random
     var randString = ""
     for(z <- 0 to 70) {
       randString = ""
@@ -112,14 +134,16 @@ object Mainn{
         randString += r.nextPrintableChar()
       }
       hTable.add(randString)
-    }*/
+    }
     //hTable.add(hTable.hashTable(0).toString())
     //println("6 size: " + hTable.determineSize(13))
-    //hTable.printHashTable()
+    hTable.add("hello")
+    println(hTable.searchTable("hell"))
+    hTable.printHashTable()
 
-    var index1 = hTable.hashFunction("1 1 3 1 1", 16)
+    /*var index1 = hTable.hashFunction("1 1 3 1 1", 16)
     var index2 = "1 1 3 1 1".hashCode
 
-    println(hTable.hashFunction("1 1 3 1 1", 16) + " index1: " + index1 + " index2: " + index2)// + " " + "1 2 1".hashCode)
+    println(hTable.hashFunction("1 1 3 1 1", 16) + " index1: " + index1 + " index2: " + index2)// + " " + "1 2 1".hashCode)*/
   }
 }
