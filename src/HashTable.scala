@@ -1,9 +1,14 @@
+
 class HashTable(n:Int) {
   //use a hashtable to access and store data instead of array buffer
-  final var TABLE_SIZE = determineSize(n)//this hash table's size does not change... sorry
+  final val TABLE_SIZE = determineSize(n)//this hash table's size does not change... sorry
   var hashTable:Array[Node] = new Array[Node](TABLE_SIZE)
-  var hashKey:String = ""
+  var palWith_m:Array[String]= _//contains all palindromes with the value m
+  var palWithMTop = 0
+  var m:Int = _
   var tableCount = 0//number of values in table
+
+
 
 
   def add(str:String): Unit ={//add string to hash table
@@ -11,6 +16,10 @@ class HashTable(n:Int) {
     if(hashTable(index)==null){
       hashTable(index) = new Node(str)
       tableCount += 1
+      if(contains(str, m)) {
+        palWith_m(palWithMTop) = str
+        palWithMTop += 1
+      }
     }
     else{
       var pointer:Node = hashTable(index)
@@ -23,6 +32,10 @@ class HashTable(n:Int) {
       }
       pointer.next = new Node(str)
       tableCount += 1
+      if(contains(str, m)) {
+        palWith_m(palWithMTop) = str
+        palWithMTop += 1
+      }
     }
 
   }
@@ -59,30 +72,11 @@ class HashTable(n:Int) {
     else {
       index
     }
-    /*
-    var index = 1
-    var keyLength = key.length
-    if(key.length>2){
-      index = key.charAt(0) + key.charAt((keyLength/2)+1) + key.charAt(keyLength-1)
-    }
-    else{//just use char in first index
-      for(i <- 0 to keyLength-1){
-        index *= key.charAt(i)
-      }
-    }
-    index = ((key.hashCode) + index) % tableSize
-    if(index<0) {
-      -index
-    }
-    else {
-      index
-    }*/
   }
   def determineSize(n:Int):Int ={//used to determine optimial size for hashtable
-    return ((Math.pow(2, (n/2).floor).toInt*2)+1)///1.7).toInt*2)+1
-
-    /*println("n: " + n)
-    return determineSizeHelp(n, true) + determineSizeHelp(n, false)*/
+    var size = Math.pow(2, (n/2).floor).toInt
+    palWith_m = new Array[String](size)
+    return ((size*2)+1)
   }
   def determineSizeHelp(n:Int, buildDirection : Boolean): Int ={
     if(n<=3)
@@ -105,6 +99,15 @@ class HashTable(n:Int) {
       }
     }
   }
+  def contains(str:String, subStr:Int): Boolean ={
+    //assumes the str string is a palindrome, only checks half of the palindrome
+    var strSplit = str.split(" ")
+    for(i <- 0 to strSplit.length/2){
+      if(strSplit(i).toInt == subStr)
+        return true
+    }
+    return false
+  }
 
   class Node(str:String){
     var value:String = str
@@ -126,7 +129,8 @@ class HashTable(n:Int) {
 object Mainn{
   def main(args: Array[String]): Unit ={
     var hTable:HashTable = new HashTable(16)
-    val r = scala.util.Random
+    println(hTable.contains("12 2 2 12", 12))
+    /*val r = scala.util.Random
     var randString = ""
     for(z <- 0 to 70) {
       randString = ""
@@ -141,9 +145,10 @@ object Mainn{
     println(hTable.searchTable("hell"))
     hTable.printHashTable()
 
-    /*var index1 = hTable.hashFunction("1 1 3 1 1", 16)
+    var index1 = hTable.hashFunction("1 1 3 1 1", 16)
     var index2 = "1 1 3 1 1".hashCode
 
     println(hTable.hashFunction("1 1 3 1 1", 16) + " index1: " + index1 + " index2: " + index2)// + " " + "1 2 1".hashCode)*/
+
   }
 }
